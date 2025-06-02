@@ -1,0 +1,91 @@
+# Modern pyproject.toml for pyWannier90
+[build-system]
+requires = [
+    "scikit-build-core>=0.4.3",
+    "pybind11>=2.6.0",
+    "cmake>=3.15",
+    "ninja"
+]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "pyWannier90"
+version = "1.0.0"
+description = "A Python interface for wannier90"
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [
+    {name = "Hung Q. Pham", email = "pqh3.14@gmail.com"}
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Fortran",
+    "Programming Language :: C++",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy>=1.19.0",
+    "pybind11>=2.6.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0",
+    "black",
+    "isort",
+    "mypy"
+]
+docs = [
+    "sphinx",
+    "sphinx-rtd-theme"
+]
+
+[project.urls]
+Homepage = "https://github.com/hungpham2017/pyWannier90"
+Documentation = "https://github.com/hungpham2017/pyWannier90"
+Repository = "https://github.com/hungpham2017/pyWannier90"
+Issues = "https://github.com/hungpham2017/pyWannier90/issues"
+
+[tool.scikit-build]
+cmake.version = ">=3.15"
+cmake.build-type = "Release"
+wheel.expand-macos-universal-tags = true
+
+[tool.scikit-build.cmake.define]
+# Enable compiler-specific optimizations
+CMAKE_BUILD_TYPE = "Release"
+# Enable position-independent code for shared libraries
+CMAKE_POSITION_INDEPENDENT_CODE = "ON"
+
+[tool.cibuildwheel]
+# Build wheels for common platforms
+build = ["cp38-*", "cp39-*", "cp310-*", "cp311-*", "cp312-*"]
+skip = ["*-win32", "*-manylinux_i686", "*-musllinux_*"]
+
+[tool.cibuildwheel.linux]
+before-all = [
+    "yum install -y openblas-devel lapack-devel",  # CentOS/RHEL
+    "apt-get update && apt-get install -y libopenblas-dev liblapack-dev gfortran || true"  # Debian/Ubuntu
+]
+
+[tool.cibuildwheel.macos]
+before-all = [
+    "brew install openblas lapack gfortran"
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+
+[tool.isort]
+profile = "black"
+line_length = 88
